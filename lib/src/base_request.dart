@@ -117,8 +117,10 @@ abstract class BaseRequest {
   /// the request is complete. If you're planning on making multiple requests to
   /// the same server, you should use a single [Client] for all of those
   /// requests.
-  Future<StreamedResponse> send() async {
-    var client = Client();
+  Future<StreamedResponse> send(Client client) async {
+    if (client == null) {
+      client = Client();
+    }
 
     try {
       var response = await client.send(this);

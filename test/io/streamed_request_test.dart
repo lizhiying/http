@@ -23,7 +23,7 @@ void main() {
         ..sink.add([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
         ..sink.close();
 
-      var response = await request.send();
+      var response = await request.send(http.Client());
       expect(
           await utf8.decodeStream(response.stream),
           parse(
@@ -35,7 +35,7 @@ void main() {
       request.sink.add([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
       request.sink.close();
 
-      var response = await request.send();
+      var response = await request.send(http.Client());
       expect(await utf8.decodeStream(response.stream),
           parse(containsPair('headers', isNot(contains('content-length')))));
     });
@@ -46,7 +46,7 @@ void main() {
     var request =
         http.StreamedRequest('GET', serverUrl.resolve('/no-content-length'));
     request.sink.close();
-    var response = await request.send();
+    var response = await request.send(http.Client());
     expect(await utf8.decodeStream(response.stream), equals('body'));
   });
 }

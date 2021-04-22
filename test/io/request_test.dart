@@ -19,7 +19,7 @@ void main() {
       ..body = 'hello'
       ..headers['User-Agent'] = 'Dart';
 
-    final response = await request.send();
+    final response = await request.send(http.Client());
 
     expect(response.statusCode, equals(200));
     final bytesString = await response.stream.bytesToString();
@@ -41,14 +41,14 @@ void main() {
   test('without redirects', () async {
     final request = http.Request('GET', serverUrl.resolve('/redirect'))
       ..followRedirects = false;
-    final response = await request.send();
+    final response = await request.send(http.Client());
 
     expect(response.statusCode, equals(302));
   });
 
   test('with redirects', () async {
     final request = http.Request('GET', serverUrl.resolve('/redirect'));
-    final response = await request.send();
+    final response = await request.send(http.Client());
 
     expect(response.statusCode, equals(200));
     final bytesString = await response.stream.bytesToString();
@@ -59,7 +59,7 @@ void main() {
     final request = http.Request('GET', serverUrl.resolve('/loop?1'))
       ..maxRedirects = 2;
     expect(
-        request.send(),
+        request.send(http.Client()),
         throwsA(isA<http.ClientException>()
             .having((e) => e.message, 'message', 'Redirect limit exceeded')));
   });
